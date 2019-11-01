@@ -19,5 +19,19 @@ namespace JsonRpcExamples.RpcClient
             return a + b;
         }
 
+
+    }
+
+    public class TickSubs
+    {
+        public int CId { get; set; }
+        public string S { get; set; }
+    }
+
+    public interface IFoo
+    {
+        Task<TickSubs> SubscribeTick();
+        Task<TickSubs> UnsubscribeTick(TickSubs sub);
+        Task<string> Ping();
     }
 }

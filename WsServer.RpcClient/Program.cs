@@ -128,18 +128,16 @@ namespace JsonRpcExamples.WsServer.RpcClient
                         rpc.CancelLocallyInvokedMethodsWhenConnectionIsClosed = true;
                         rpc.AddLocalRpcMethod("PrintSomething", new Action<int>(param => Console.WriteLine($"Something: {param}!")));
                         rpc.StartListening();
-
+                        var foo = rpc.Attach<IFoo>();
                         // Call and response
-                        Console.WriteLine(await rpc.InvokeAsync<string>("Ping"));
+                        Console.WriteLine(await foo.Ping());
 
-                        string res = await rpc.InvokeAsync<string>("SubscribeTick");
-
-                        TickSubs account = JsonConvert.DeserializeObject<TickSubs>(res);
-
+                        var result = await foo.SubscribeTick();
+                        
                         Thread.Sleep(10000);
 
-                        var result = await rpc.InvokeAsync<string>("UnsubscribeTick", new object[] { JsonConvert.SerializeObject(account, Formatting.None) } );
-                        Console.WriteLine(result);
+                        var result2 = await foo.UnsubscribeTick(result);
+                        Console.WriteLine(JsonConvert.SerializeObject(result2));
 
                         await rpc.Completion; // throws exceptions - closed connection,etc.
                     }
@@ -157,12 +155,6 @@ namespace JsonRpcExamples.WsServer.RpcClient
                     this.manager.connections.TryRemove(this.socket_id, out OpenSocket value);
                 }
             }        
-        }
-
-        public class TickSubs
-        {
-            public int CId { get; set; }
-            public string S { get; set; }
         }
     }
 }

@@ -29,7 +29,7 @@ async def Ping(context: Context, *params) -> str:
 class Tick:
     @staticmethod
     @methods.add
-    async def SubscribeTick(context: Context) -> str:
+    async def SubscribeTick(context: Context):
         """
         :param context: Context of WS
         :param params - useful for filtering results
@@ -40,13 +40,13 @@ class Tick:
                 "S": 'true',
                 "CId": cid,
             }
-            return str(data)
+            return data
         except:
             raise ExceptionResponse
 
     @staticmethod
     @methods.add
-    async def UnsubscribeTick(context: Context, *params) -> str:
+    async def UnsubscribeTick(context: Context, *params):
         """
             :param context:
             :param params: {CId:int}
@@ -56,17 +56,16 @@ class Tick:
         args = params[0]  # serialized object from Python->C#->Python
         if args is None:
             raise InvalidParamsResponse("Missing parameters")
-        args_dict = json.loads(args)
-        if "CId" not in args_dict:
+        if "CId" not in args:
             raise InvalidParamsResponse("Missing CancellationToken")
         try:
-            await context.cancel_future(args_dict["CId"])
+            await context.cancel_future(args["CId"])
 
             res = {
                 "S": 'false',
-                "CId": args_dict["CId"]
+                "CId": args["CId"]
             }
-            return str(res)
+            return res
         except:
             raise ExceptionResponse
 
