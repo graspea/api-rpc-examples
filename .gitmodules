@@ -1,0 +1,3 @@
+[submodule "WsClient/jsonrpcsymmetric"]
+	path = WsClient/jsonrpcsymmetric
+	url = git@github.com:graspea/jsonrpcsymmetric.git

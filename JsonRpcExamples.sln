@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WsServer.RpcServer", ".\WsServer.RpcServer\WsServer.RpcServer.csproj", "{75E1DA03-F739-4E14-B27E-F7E8BC205026}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WsServer", "WsServer.RpcClient\WsServer.csproj", "{FF24316C-C8EF-4E1E-9101-2A4F8BEE9562}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WsServer.RpcClient", ".\WsServer.RpcClient\WsServer.RpcClient.csproj", "{FF24316C-C8EF-4E1E-9101-2A4F8BEE9562}"
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WsClient.RpcServer", ".\WsClient.RpcServer\WsClient.RpcServer.pyproj", "{62F374CA-4710-469C-9F82-0A4AE5D9DC5F}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WsClient", "WsClient\WsClient.pyproj", "{62F374CA-4710-469C-9F82-0A4AE5D9DC5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{75E1DA03-F739-4E14-B27E-F7E8BC205026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75E1DA03-F739-4E14-B27E-F7E8BC205026}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75E1DA03-F739-4E14-B27E-F7E8BC205026}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75E1DA03-F739-4E14-B27E-F7E8BC205026}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF24316C-C8EF-4E1E-9101-2A4F8BEE9562}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FF24316C-C8EF-4E1E-9101-2A4F8BEE9562}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF24316C-C8EF-4E1E-9101-2A4F8BEE9562}.Release|Any CPU.ActiveCfg = Release|Any CPU

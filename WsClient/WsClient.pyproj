@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>62f374ca-4710-469c-9f82-0a4ae5d9dc5f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>WsClient.RpcServer.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,15 +22,25 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="JsonRpcSymmetric\handlers.py" />
+    <Compile Include="example\api.py" />
+    <Compile Include="example\impl.py" />
+    <Compile Include="example\wsclient.py" />
+    <Compile Include="example\__init__.py" />
+    <Compile Include="jsonrpcsymmetric\errors.py" />
     <Compile Include="JsonRpcSymmetric\internals.py" />
-    <Compile Include="JsonRpcSymmetric\rpcServer.py" />
+    <Compile Include="jsonrpcsymmetric\methods.py" />
     <Compile Include="JsonRpcSymmetric\setup.py" />
+    <Compile Include="jsonrpcsymmetric\typing.py" />
+    <Compile Include="jsonrpcsymmetric\wsrpc.py" />
     <Compile Include="JsonRpcSymmetric\__init__.py" />
-    <Compile Include="WsClient.RpcServer.py" />
+    <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="example\" />
     <Folder Include="JsonRpcSymmetric\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="jsonrpcsymmetric\Pipfile" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

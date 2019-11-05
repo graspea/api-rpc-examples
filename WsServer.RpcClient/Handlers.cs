@@ -3,35 +3,49 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using JsonRpcExamples.Api;
+using JsonRpcExamples.Api.Models;
 
-
-namespace JsonRpcExamples.RpcClient
+namespace JsonRpcExamples.WsServer
 {
-    class Handlers
+    class Handlers : IHandlers
     {
+        private OpenSocketsService manager;
 
-        public void Tick(int param) => Console.WriteLine($"TickFromRpcServer: {param}!");
+        public Handlers(OpenSocketsService manager) { 
+        }
+        
+        async public Task<string> Ping()
+        {
+            Console.WriteLine($"Ping from server!");
+            return "Pong";
+        }
 
-        public void Hello(string param) => Console.WriteLine($"HelloFromWsClient: {param}!");
+        async public Task Tick(int tick)
+        {
+            Console.WriteLine("Tick "+tick.ToString());
+        }
 
-        public int Add(int a, int b){
-            Thread.Sleep(5000);
+        async public Task<int> Add(int a, int b)
+        {
+            await Task.Delay(4000);
             return a + b;
         }
 
+        async public Task Hello(Hello info)
+        {
+            Console.WriteLine("Hello! My name: "+info.name.ToString());
+            return;
+        }
 
-    }
+        async public Task<Subscription> SubscribeTick()
+        {
+            throw new NotImplementedException();
+        }
 
-    public class TickSubs
-    {
-        public int CId { get; set; }
-        public string S { get; set; }
-    }
-
-    public interface IFoo
-    {
-        Task<TickSubs> SubscribeTick();
-        Task<TickSubs> UnsubscribeTick(TickSubs sub);
-        Task<string> Ping();
+        async public Task<Subscription> UnsubscribeTick(Subscription subscription)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
