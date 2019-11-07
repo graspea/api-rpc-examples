@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WsServer", "WsServer.RpcClient\WsServer.csproj", "{FF24316C-C8EF-4E1E-9101-2A4F8BEE9562}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WsServer", "WsServer\WsServer.csproj", "{FF24316C-C8EF-4E1E-9101-2A4F8BEE9562}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WsClient", "WsClient\WsClient.pyproj", "{62F374CA-4710-469C-9F82-0A4AE5D9DC5F}"
 EndProject

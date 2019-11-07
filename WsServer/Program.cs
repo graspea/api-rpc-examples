@@ -44,17 +44,17 @@ namespace JsonRpcExamples.WsServer
         public void Configure(IApplicationBuilder app)
         {
             app.UseWebSockets();
-            app.UseMiddleware<WSDispatcherMiddleware>(); //receives socket here
+            app.UseMiddleware<WsMiddleware>();
         }
     }
 
     /// <summary>
     /// Takes care of new websocket connection and loads singleton OpenWebSockesMiddleware
     /// </summary>
-    class WSDispatcherMiddleware
+    class WsMiddleware
     {
         private OpenSocketsService service;
-        public WSDispatcherMiddleware(RequestDelegate req,OpenSocketsService service)
+        public WsMiddleware(RequestDelegate req,OpenSocketsService service)
         {
             this.service = service;
         }
@@ -73,21 +73,24 @@ namespace JsonRpcExamples.WsServer
 
     public class OpenSocketsService
     {
-        private ConcurrentDictionary<int, OpenSocket> connections;
-        private int counter;
+        private ConcurrentDictionary<int, OpenSocket> Connections;
+        private int Counter;
 
         public OpenSocketsService()
         {
-            this.connections = new ConcurrentDictionary<int, OpenSocket>();
+            this.Connections = new ConcurrentDictionary<int, OpenSocket>();
         }
 
         public async Task HandleNewConnection(WebSocket ws)
         {
-            OpenSocket osc = new OpenSocket(ws, this.counter, this);
+            int id = this.Counter;
+            this.Counter++;
+            OpenSocket osc = new OpenSocket(ws, this,id);
             
-            if(!this.connections.TryAdd(this.counter++, osc))
+            if(!this.Connections.TryAdd(this.Counter++, osc))
             {
-                await osc.socket.CloseAsync(WebSocketCloseStatus.InternalServerError, "Missmatch in ids", CancellationToken.None);
+                // Missing proper CancellationToken handling
+                await osc.Socket.CloseAsync(WebSocketCloseStatus.InternalServerError, "Missmatch in ids", CancellationToken.None);
             }
             else
             {
@@ -98,30 +101,26 @@ namespace JsonRpcExamples.WsServer
 
         public class OpenSocket
         {
-            private OpenSocketsService manager;
-            public WebSocket socket;
-            public JsonRpc rpc;
-            private int socket_id;
+            private OpenSocketsService Manager;
+            public readonly int Id;
+            public WebSocket Socket;
+            public JsonRpc Rpc;
 
-            public OpenSocket(WebSocket ws, int id, OpenSocketsService manager)
+            public OpenSocket(WebSocket ws, OpenSocketsService manager, int id)
             {
-                this.socket = ws;
-                this.socket_id = id;
-                this.manager = manager;
-                this.rpc = new JsonRpc(new WebSocketMessageHandler(this.socket), new Handlers(this.manager));
+                this.Socket = ws;
+                this.Manager = manager;
+                this.Rpc = new JsonRpc(new WebSocketMessageHandler(this.Socket), new Handlers(this.Manager));
             }
-
-            public int GetId() => this.socket_id;
 
             public async Task Dispatch()
             {
-                    Console.WriteLine("New connection: " + this.socket_id.ToString());
 
-                    using (rpc){
-                        rpc.CancelLocallyInvokedMethodsWhenConnectionIsClosed = true;
-                        rpc.StartListening();
+                    using (Rpc){
+                        Rpc.CancelLocallyInvokedMethodsWhenConnectionIsClosed = true;
+                        Rpc.StartListening();
                         // Attach api
-                        var otherSide = rpc.Attach<Api.IHandlers>();
+                        var otherSide = Rpc.Attach<Api.IHandlers>();
                         while (true)
                         {
                             try{
@@ -131,16 +130,11 @@ namespace JsonRpcExamples.WsServer
 
                                 var result = await otherSide.SubscribeTick();
 
-                                Thread.Sleep(10000);
-                                if (result.s)
-                                {
-                                    Console.WriteLine("Status true");
-                                }
-
+                                await Task.Delay(5000);
                                 var result2 = await otherSide.UnsubscribeTick(result);
                                 Console.WriteLine(JsonConvert.SerializeObject(result2));
-                                await rpc.Completion; // throws exceptions - closed connection,etc.
-                                if (rpc.Completion.Exception == null)
+                                await Rpc.Completion; // throws exceptions - closed connection,etc.
+                                if (Rpc.Completion.Exception == null)
                                 {
                                     break;
                                 }
@@ -159,8 +153,9 @@ namespace JsonRpcExamples.WsServer
                                 }
                             }
                         }
-                        Console.WriteLine("End connection: " + this.socket_id.ToString());
-                        this.manager.connections.TryRemove(this.socket_id, out OpenSocket value);
+
+                        // Missing: WS close
+                        this.Manager.Connections.TryRemove(this.Id, out OpenSocket value);
                     }             
             }        
         }
